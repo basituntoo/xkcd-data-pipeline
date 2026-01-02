@@ -162,14 +162,14 @@ dbt run
 dbt test
 
 ---
-##Requirements Coverage
-###Requirement	Status
-###Fetch XKCD data	✅
-###Insert into database	✅
-###Polling logic	✅
-###Dimensional model	✅
-###Views / Cost / Reviews metrics	✅
-###Data quality checks	✅
-###dbt transformations	✅
-###Airflow DAG	✅ (bonus)
-###Automated scheduling	✅ (design)
+| Requirement                    | Status     |
+| ------------------------------ | ---------- |
+| Fetch XKCD data                | ✓          |
+| Insert into database           | ✓          |
+| Polling logic                  | ✓          |
+| Dimensional model              | ✓          |
+| Views / Cost / Reviews metrics | ✓          |
+| Data quality checks            | ✓          |
+| dbt transformations            | ✓          |
+| Airflow DAG                    | ✓ (bonus)  |
+| Automated scheduling           | ✓ (design) |
