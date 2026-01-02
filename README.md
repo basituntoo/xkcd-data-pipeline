@@ -1,168 +1,173 @@
-# xkcd-data-pipeline
-#XKCD Data Pipeline – Data Engineering Case Study
-##📌 Project Overview
+# XKCD Data Pipeline  
+### Data Engineering Case Study
 
-This project implements an end-to-end data pipeline for ingesting, transforming, and modeling XKCD comics data.
+---
 
-###The pipeline:
+## 📌 Project Overview
 
-Fetches comics from the XKCD public API
+This project implements an **end-to-end data pipeline** for ingesting, transforming, and modeling **XKCD comics data**.
 
-Loads them into a PostgreSQL database (Neon)
+### The pipeline:
+- Fetches comics from the XKCD public API  
+- Loads data into a PostgreSQL database (Neon)  
+- Transforms raw data into analytics-ready dimensional models  
+- Supports automation using **Airflow** and **dbt**
 
-Transforms raw data into analytics-ready dimensional models
+The solution is intentionally designed to be **clear, reliable, and interview-friendly**, rather than production-grade complex.
 
-Supports automation via Airflow and dbt
+---
 
-The solution is designed with simplicity, reliability, and interview clarity in mind rather than production-grade complexity.
+## 🏗 Architecture Overview
 
-🏗 ###Architecture Overview
+**High-level data flow:**
 
-High-level flow:
 XKCD API
-   ↓
+↓
 Python Ingestion Script
-   ↓
+↓
 PostgreSQL (Neon)
-   ↓
+↓
 dbt Transformations
-   ↓
+↓
 Dim / Fact Tables (Analytics Ready)
 
 
-Automation is handled using:
+### Automation tools used:
+- **Airflow** → orchestration & scheduling  
+- **dbt** → transformations & data quality checks  
 
-Airflow → orchestration & scheduling
+---
 
-dbt → transformations & data quality checks
+## 🔹 Part 1: Extract & Load
 
-##Part 1: Extract & Load
-What was built
+### What Was Built
 
 A Python ingestion script that:
+- Fetches comics using the official XKCD API  
+- Implements polling logic to detect newly published comics  
+- Inserts data into PostgreSQL  
+- Prevents duplicate inserts using `ON CONFLICT DO NOTHING`  
+- Automatically resumes from the last successfully ingested comic  
 
-Fetches XKCD comics using the official API
+---
 
-Implements polling logic to detect new comics
+### Key Files
 
-Inserts data into PostgreSQL
-
-Avoids duplicate inserts using ON CONFLICT DO NOTHING
-
-Resumes automatically if interrupted
-
-###Key files
 ingestion/
 └── fetch_xkcd.py
 
-###Tables created
 
-xkcd_raw – raw comic data
+---
 
-ingestion_state – tracks last successfully ingested comic ID
+### Tables Created
 
-###Scheduling
+- **xkcd_raw** – stores raw comic data  
+- **ingestion_state** – tracks the last successfully ingested comic ID  
 
-Comics are published Mondays, Wednesdays, Fridays
+---
 
-Polling logic ensures comics are ingested as soon as available
+### Scheduling Logic
 
-🔄## Part 2: Transform
-###Business requirements implemented
-Metric	Logic
-Cost	number_of_letters_in_title × 5 EUR
-Views	random number between 0 and 1 × 10,000
-Reviews	random score between 1.0 and 10.0
+- XKCD publishes comics on **Mondays, Wednesdays, and Fridays**
+- Polling logic ensures comics are ingested **as soon as they become available**
 
-###Data Warehouse Model (Kimball Style)
-####Dimension table
+---
 
-dim_comic
+## 🔹 Part 2: Transform
 
-comic_id (PK)
+### Business Requirements Implemented
 
-title
+| Metric | Logic |
+|------|------|
+| Cost | Number of letters in title × 5 EUR |
+| Views | Random number between 0 and 1 × 10,000 |
+| Reviews | Random score between 1.0 and 10.0 |
 
-publish_date
+---
 
-img_url
+## 🧱 Data Warehouse Model (Kimball Style)
 
-alt_text
+### Dimension Table: `dim_comic`
 
-####Fact table
+- `comic_id` (Primary Key)  
+- `title`  
+- `publish_date`  
+- `img_url`  
+- `alt_text`  
 
-fact_comic_metrics
+---
 
-comic_id (FK)
+### Fact Table: `fact_comic_metrics`
 
-views
+- `comic_id` (Foreign Key)  
+- `views`  
+- `cost_eur`  
+- `review_score`  
+- `snapshot_date`  
 
-cost_eur
+This model supports efficient aggregation and BI-friendly analysis.
 
-review_score
+---
 
-snapshot_date
+## ✅ Data Quality Checks
 
-This model supports easy aggregation and BI analysis.
+Implemented using **dbt tests**:
+- Primary key uniqueness  
+- Non-null constraints  
+- Referential integrity between fact and dimension tables  
+- Valid numeric ranges for:
+  - `views`
+  - `review_score`
 
-###✅ Data Quality Checks
+---
 
-Implemented via dbt tests:
+## ⚙️ Automation
 
-Primary key uniqueness
+### Airflow
 
-Non-null constraints
+- DAG scheduled for **Monday / Wednesday / Friday**
+- Tasks:
+  - Poll XKCD API
+  - Execute ingestion script (`fetch_xkcd.py`)
+- DAG provided as production-ready code (not executed locally)
 
-Referential integrity between fact and dimension tables
-
-Valid numeric ranges for:
-
-views
-
-review_score
-
-##⚙️ Automation
-###Airflow
-
-DAG scheduled for Mon/Wed/Fri
-
-Tasks:
-
-Poll XKCD API
-
-Run ingestion script (fetch_xkcd.py)
-
-DAG provided as production-ready code (not executed locally)
 airflow/dags/xkcd_ingestion_dag.py
 
-###dbt
+---
 
-Used for transformation layer
+### dbt
 
-Generates:
+- Used as the transformation layer
+- Generates:
+  - `dim_comic`
+  - `fact_comic_metrics`
+- Includes automated data quality tests
 
-dim_comic
-
-fact_comic_metrics
-
-Includes automated tests
 dbt/
 ├── models/
 ├── tests/
 └── dbt_project.yml
 
-##How to Run Locally
-###1. Run ingestion manually
+
+---
+
+## ▶️ How to Run Locally
+
+### 1. Run ingestion manually
+```bash
+python ingestion/fetch_xkcd.py
+
+2. Run transformations and tests
 dbt run
 dbt test
 
-##Requirements Coverage
+Requirements Coverage
 Requirement	Status
 Fetch XKCD data	✅
-Insert into DB	✅
+Insert into database	✅
 Polling logic	✅
 Dimensional model	✅
-Views / Cost / Reviews	✅
+Views / Cost / Reviews metrics	✅
 Data quality checks	✅
 dbt transformations	✅
 Airflow DAG	✅ (bonus)
