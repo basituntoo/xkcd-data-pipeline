@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: dim_comic
+    columns:
+      - name: comic_id
+        tests:
+          - not_null
+          - unique
+
+  - name: fact_comic_metrics
+    columns:
+      - name: comic_id
+        tests:
+          - not_null
+      - name: views
+        tests:
+          - not_null
+      - name: review_score
+        tests:
+          - not_null
