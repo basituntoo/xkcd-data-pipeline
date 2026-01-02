@@ -156,12 +156,13 @@ dbt/
 ### 1. Run ingestion manually (bash)
 python ingestion/fetch_xkcd.py
 
-2. Run transformations and tests
+### 2. Run transformations and tests
 
 dbt run
 dbt test
 
-##| Requirement                    | Status     |
+## | Requirement                    | Status     |
+
 | ------------------------------ | ---------- |
 | Fetch XKCD data                | ✓          |
 | Insert into database           | ✓          |
