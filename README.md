@@ -17,7 +17,7 @@ The solution is intentionally designed to be **clear, reliable, and interview-fr
 
 ---
 
-## 🏗 Architecture Overview
+##  Architecture Overview
 
 **High-level data flow:**
 
@@ -38,7 +38,7 @@ Dim / Fact Tables (Analytics Ready)
 
 ---
 
-## 🔹 Part 1: Extract & Load
+##  Part 1: Extract & Load
 
 ### What Was Built
 
@@ -73,7 +73,7 @@ ingestion/
 
 ---
 
-## 🔹 Part 2: Transform
+##  Part 2: Transform
 
 ### Business Requirements Implemented
 
@@ -85,7 +85,7 @@ ingestion/
 
 ---
 
-## 🧱 Data Warehouse Model (Kimball Style)
+##  Data Warehouse Model (Kimball Style)
 
 ### Dimension Table: `dim_comic`
 
@@ -109,7 +109,7 @@ This model supports efficient aggregation and BI-friendly analysis.
 
 ---
 
-## ✅ Data Quality Checks
+##  Data Quality Checks
 
 Implemented using **dbt tests**:
 - Primary key uniqueness  
@@ -151,7 +151,7 @@ dbt/
 
 ---
 
-## ▶️ How to Run Locally
+## ▶ How to Run Locally
 
 ### 1. Run ingestion manually
 ```bash
@@ -161,14 +161,15 @@ python ingestion/fetch_xkcd.py
 dbt run
 dbt test
 
-Requirements Coverage
-Requirement	Status
-Fetch XKCD data	✅
-Insert into database	✅
-Polling logic	✅
-Dimensional model	✅
-Views / Cost / Reviews metrics	✅
-Data quality checks	✅
-dbt transformations	✅
-Airflow DAG	✅ (bonus)
-Automated scheduling	✅ (design)
+
+##Requirements Coverage
+###Requirement	Status
+###Fetch XKCD data	✅
+###Insert into database	✅
+###Polling logic	✅
+###Dimensional model	✅
+###Views / Cost / Reviews metrics	✅
+###Data quality checks	✅
+###dbt transformations	✅
+###Airflow DAG	✅ (bonus)
+###Automated scheduling	✅ (design)
