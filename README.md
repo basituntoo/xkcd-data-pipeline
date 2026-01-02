@@ -151,7 +151,7 @@ dbt/
 
 ---
 
-## ▶ How to Run Locally
+##  How to Run Locally
 
 ### 1. Run ingestion manually
 ```bash
@@ -161,7 +161,7 @@ python ingestion/fetch_xkcd.py
 dbt run
 dbt test
 
-
+---
 ##Requirements Coverage
 ###Requirement	Status
 ###Fetch XKCD data	✅
