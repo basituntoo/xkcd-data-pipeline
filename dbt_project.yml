@@ -1,0 +1,16 @@
+name: xkcd_dbt
+version: '1.0.0'
+config-version: 2
+
+profile: xkcd_dbt
+
+model-paths: ["xkcd_dbt/models"]
+analysis-paths: ["xkcd_dbt/analyses"]
+test-paths: ["xkcd_dbt/tests"]
+seed-paths: ["xkcd_dbt/seeds"]
+macro-paths: ["xkcd_dbt/macros"]
+snapshot-paths: ["xkcd_dbt/snapshots"]
+
+clean-targets:
+  - target
+  - dbt_packages
